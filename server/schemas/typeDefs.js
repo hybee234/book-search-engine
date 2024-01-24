@@ -1,21 +1,46 @@
+// Define the necessary `Query` and `Mutation` types
+
 const typeDefs = `
-  type User {
-    _id: ID
-    username: String
-    email: String
-    password: String
-  }
+    type Book {
+        _id: ID
+        authors: [String]
+        description: String
+        bookId: String
+        image: String        
+        link: String
+        title: String
+    }
 
-  # type Auth {
-  #   token: ID!
-  #   profile: Profile
-  # }
+    type User {
+        _id: ID
+        username: String
+        email: String
+        bookCount: Int
+        savedBooks: [Book]
+    }
 
-  type Query {
-    singleUser(_id: ID!): User
-    # Because we have the context functionality in place to check a JWT and decode its data, we can use a query that will always find and return the logged in user's data
-    get
-  }
+    type Query {
+        users: [User]
+        singleUser(username: String, userId: ID): User
+    }
+
+    input saveBookInput {
+        bookId: ID
+        authors: [String]
+        description: String
+        title: String
+        image: String
+        link: String
+    }
+
+
+    type Mutation {
+        createUser(username: String! email: String!): User
+  #      login(username: String! email: String!): User
+  #      saveBook(userId: ID! input:saveBookInput): User
+  #      deleteBook (userId: ID! bookId: ID! ): User
+    }
+
 
 `;
 
