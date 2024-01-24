@@ -62,14 +62,14 @@ const resolvers = {
 
         // Save book under user profile
         saveBook: async (parent, args, context) => {
-            // console.log(args)
-            // console.log(context)
+            console.log(args)
             const saveBook = await User.findOneAndUpdate(
                 { _id: args.userId },
                 { $addToSet: { savedBooks: args.book } },
                 { new: true, runValidators: true }
             );
 
+            console.log(saveBook)
             // // If user attempts to execute this mutation and isn't logged in, throw an error
             // throw AuthenticationError;
 
