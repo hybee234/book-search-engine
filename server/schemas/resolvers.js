@@ -1,21 +1,46 @@
-// import user model
-const { User } = require('../models');
-// import sign token function from auth
-const { signToken } = require('../utils/auth');
+// Define the query and mutation functionality to work with the Mongoose models.
+const { User } = require("../models");
+const { AuthenticationError } = require("apollo-server-express");
+const { signToken } = require("../utils/auth");
 
 const resolvers = {
-  Query: {
-    singleUser: async (parent, args, context) => {
-      return await User.find();
+    Query: {
+        users: async () => {
+            return User.find().select("-__v -password").populate("book");
+        },
+        
+        singleUser: async (parent, args) => {
+            console.log (args)
+            return User.findOne({
+                $or: [{ username: args.username }, {_id: args.userId}],
+            });
+            
+            
+            //console.log (user)
+        
+            // if (!foundUser) {
+            //     return res.status(400).json({ message: 'Cannot find a user with this id!' });
+            // }
+        
+            // return(user)
 
+        }
 
-      // class: async (parent, args, context) => {
-      //   return await Class.findById (args.id).populate('professor')
-      // },
+        // getSingleUser: async (parent, { username }) => {
+        //     return User.findOne({ username })
+        //         .select("-__v -password")
+        //         .populate("book");
+        // },
     },
-  }
+
+
+    Mutation: {
+        createUser : async (parent, {args}) => {
+            return User.create({args})
+
+        }
+    }
+
 };
 
-module.export =resolvers;
-
-    
+module.exports = resolvers;
