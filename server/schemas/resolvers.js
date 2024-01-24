@@ -42,7 +42,7 @@ const resolvers = {
             return { token, user }
         },
 
-        //Find user by _ID or by username
+        // Find user by _ID or by username
         login : async (parent, args) => {
             //Check User
             const user = await User.findOne({                
@@ -58,7 +58,24 @@ const resolvers = {
             }
             const token = signToken(user)            
             return { token, user }
-        }
+        },
+
+        // Save book under user profile
+        saveBook: async (parent, args, context) => {
+            // console.log(args)
+            // console.log(context)
+            const saveBook = await User.findOneAndUpdate(
+                { _id: args.userId },
+                { $addToSet: { savedBooks: args.book } },
+                { new: true, runValidators: true }
+            );
+
+            // // If user attempts to execute this mutation and isn't logged in, throw an error
+            // throw AuthenticationError;
+
+            return {saveBook}
+        },
+
     }
 
 };
