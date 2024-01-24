@@ -5,6 +5,7 @@ const secret = 'mysecretssshhhhhhh';
 const expiration = '2h';
 
 module.exports = {
+    //Custom error message when authentication fails (resolvers)
     AuthenticationError: new GraphQLError('Could not authenticate user.', {
         extensions: {
             code: 'UNAUTHENTICATED',

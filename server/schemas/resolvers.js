@@ -2,17 +2,18 @@
 const { User } = require("../models");
 const { AuthenticationError } = require("apollo-server-express");
 const { signToken } = require("../utils/auth");
+// import { GraphQLError } from 'graphql';
+
 
 const resolvers = {
     Query: {
         users: async () => {
             return User.find().select("-__v -password").populate("book");
         },
-        
-        singleUser: async (parent, args) => {
-            console.log (args)
-            return User.findOne({
-                $or: [{ username: args.username }, {_id: args.userId}],
+        //Find one user based on username or _id
+        singleUser: async (parent, args) => {            
+            return User.findOne({                
+                $or: [{ username: args.username }, { _id: args.userId }],                
             });
             
             
@@ -35,9 +36,28 @@ const resolvers = {
 
 
     Mutation: {
-        createUser : async (parent, {args}) => {
-            return User.create({args})
+        createUser : async (parent, args) => {
+            const user = await User.create(args)
+            const token = signToken(user)            
+            return { token, user }
+        },
 
+        //Find user by _ID or by username
+        login : async (parent, args) => {
+            //Check User
+            const user = await User.findOne({                
+                $or: [{ username: args.username }, { _id: args.userId }],                
+            });
+            if (!user) {
+                throw AuthenticationError;
+            }
+            // Check Password
+            const correctPw = await user.isCorrectPassword(args.password);
+            if (!correctPw) {
+                throw AuthenticationError;
+            }
+            const token = signToken(user)            
+            return { token, user }
         }
     }
 
