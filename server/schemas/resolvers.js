@@ -62,20 +62,35 @@ const resolvers = {
 
         // Save book under user profile
         saveBook: async (parent, args, context) => {
-            console.log(args)
+            // console.log(args)
+            console.log(context.User)
             const saveBook = await User.findOneAndUpdate(
                 { _id: args.userId },
                 { $addToSet: { savedBooks: args.book } },
                 { new: true, runValidators: true }
             );
 
-            console.log(saveBook)
+            // console.log(saveBook)
             // // If user attempts to execute this mutation and isn't logged in, throw an error
             // throw AuthenticationError;
 
-            return {saveBook}
+            // TODO - make sure user is logged in - or is this route only available when logged in?
+
+            return saveBook
         },
 
+        deleteBook: async (parent, args, context) => {
+            console.log(args)
+            const updatedUser = await User.findOneAndUpdate(
+                { _id: args.userId },
+                { $pull: { savedBooks: { bookId: args.bookId } } },
+                { new: true }
+            );
+
+            // TODO - make sure user is logged in - or is this route only available when logged in?
+
+            return updatedUser;
+        },
     }
 
 };
