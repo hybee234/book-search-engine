@@ -70,6 +70,7 @@ const SignupForm = () => {
             event.stopPropagation();
         }
 
+        // Graph QL useMutation method
         try {
 
             const { data } = await CreateUser({
@@ -80,10 +81,11 @@ const SignupForm = () => {
                 }
             })
 
-            console.log("data", data)
-            console.log("data.createUser.token", data.createUser.token)
-            console.log("data.createUser.user", data.createUser.user)
+            // console.log("data", data)
+            // console.log("data.createUser.token", data.createUser.token)
+            // console.log("data.createUser.user", data.createUser.user)
 
+            // Store token in local storage - id_token (Auth.login already redirects use to home page)
             Auth.login(data.createUser.token);
         } catch (err) {
             console.error(err);
