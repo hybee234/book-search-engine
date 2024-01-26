@@ -8,7 +8,9 @@ const { signToken } = require("../utils/auth");
 const resolvers = {
     Query: {
         users: async () => {
-            return User.find().select("-__v -password").populate("book");
+            return User.find()
+            //.select("-__v -password")
+            // .populate("Book");
         },
         //Find one user based on username or _id
         singleUser: async (parent, args) => {            
@@ -48,7 +50,7 @@ const resolvers = {
             const user = await User.findOne({                
                 $or: [{ username: args.username }, { email: args.email }],                
             });
-            console.log ("user", user)
+            // console.log ("user", user)
             if (!user) {
                 throw AuthenticationError;
             }
