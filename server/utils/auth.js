@@ -11,8 +11,9 @@ module.exports = {
             code: 'UNAUTHENTICATED',
         },
     }),
+    //Server validation of token with requests from client
     authMiddleware: function ({req}) {
-        // allows token to be sent via req.body, req.query, or headers
+        // allows token to be received by server via req.body, req.query, or headers
         let token = req.body.token || req.query.token || req.headers.authorization;
 
         // if header, then split out "Bearer"
@@ -34,6 +35,8 @@ module.exports = {
         // return the request object so it can be passed to the resolver as `context`
         return req;
     },
+
+    //Create JWT - called by "createUser" and "login" resolvers
     signToken: function ({ username, email, _id }) {
         const payload = { username, email, _id };
 
