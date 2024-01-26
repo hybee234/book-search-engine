@@ -42,12 +42,13 @@ const resolvers = {
             return { token, user }
         },
 
-        // Find user by _ID or by username
+        // Find user by email or by username
         login : async (parent, args) => {
             //Check User
             const user = await User.findOne({                
-                $or: [{ username: args.username }, { _id: args.userId }],                
+                $or: [{ username: args.username }, { email: args.email }],                
             });
+            console.log ("user", user)
             if (!user) {
                 throw AuthenticationError;
             }

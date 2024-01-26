@@ -20,6 +20,7 @@ const startApolloServer = async () => {
   app.use(express.json());
 
   app.use('/graphql', expressMiddleware(server, {
+    // Validate JWT provided by client using this function
     context: authMiddleware
   }));
 
