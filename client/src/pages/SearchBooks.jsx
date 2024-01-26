@@ -10,7 +10,8 @@ import {
 
 import { Link } from 'react-router-dom';
 import Auth from '../utils/auth';
-import { saveBook, searchGoogleBooks } from '../utils/API';
+import { searchGoogleBooks } from '../utils/API';
+//import { saveBook } from '../utils/API';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 
 import { useMutation } from '@apollo/client';
@@ -48,7 +49,6 @@ const SearchBooks = () => {
             }
 
             const { items } = await response.json();
-
 
             // console.log("items", items)
 
@@ -97,21 +97,16 @@ const SearchBooks = () => {
     // };
 
 
-    // TO turn to GraphQL
+    // To turn to GraphQL
     // Bring GraphQL query in with useMutation Hook
     const [SaveBook, { error }] = useMutation(SAVE_BOOK);
 
     // create function to handle saving a book to our database
     const handleSaveBook = async (bookId) => {
+        
         // find the book in `searchedBooks` state by the matching id
         const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
         // console.log('bookToSave', bookToSave)
-        // get token
-        const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-        if (!token) {
-            return false;
-        }
 
         try {
             const { data } = await SaveBook({
@@ -122,7 +117,7 @@ const SearchBooks = () => {
 
             // Data provides the "saveBook JSON array"
             console.log("data", data)
-            
+
             // if book successfully saves to user's account, save book id to state
             setSavedBookIds([...savedBookIds, bookToSave.bookId]);
         } catch (err) {

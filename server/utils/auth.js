@@ -42,7 +42,7 @@ module.exports = {
             console.log (`\x1b[33m │ authMiddleware │ \x1b[0m\x1b[32m│ Token Verified │ \x1b[0m`); 
             console.log (`\x1b[33m └────────────────┘ \x1b[0m\x1b[32m└────────────────┘ \x1b[0m`); 
 
-            console.log ("data", data)
+            // console.log ("server auth.js: data", data)
 
         } catch {
             console.log('Invalid token');     

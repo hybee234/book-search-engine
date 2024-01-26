@@ -36,10 +36,14 @@ const resolvers = {
             console.log (`\x1b[33m │ Find Me  │ \x1b[0m\x1b[32m  \x1b[0m`); 
             console.log (`\x1b[33m └──────────┘ \x1b[0m\x1b[32m  \x1b[0m`); 
 
+            console.log("context.user Find me", context.user)
+            console.log("user._id", context.user._id)
+
             if (context.user) {
                 const userData = await User.findOne({ _id: context.user._id })
-                    .select("-__v -password")
-                    .populate("book");
+                
+                // console.log("userData - FindMe ", userData)
+
                 return userData;
             }
             

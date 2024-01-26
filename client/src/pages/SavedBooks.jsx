@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
 import {
     Container,
     Card,
@@ -8,10 +9,10 @@ import {
 } from 'react-bootstrap';
 
 import { getMe, deleteBook } from '../utils/API';
+
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
-import { useMutation, useQuery } from '@apollo/client';
 import { GET_ME } from './../utils/queries'
 import { DELETE_BOOK } from './../utils/mutations'
 
@@ -21,6 +22,10 @@ const SavedBooks = () => {
     // use this to determine if `useEffect()` hook needs to run again
     const userDataLength = Object.keys(userData).length;
 
+
+    const {loading, data} = useQuery( GET_ME ); // fetch data
+    console.log('data - get_me front end', data)
+    console.log("userDataLength", userDataLength)
     // Original code - RESTApi
     // useEffect(() => {
     //     const getUserData = async () => {
@@ -52,49 +57,34 @@ const SavedBooks = () => {
     //     }, [userDataLength]
     // );
 
-    const {loading, data} = useQuery ( GET_ME );
-    console.log('data', data)
+
 
     // New code Graph QL
     useEffect(() => {
-        const getUserData = async () => {
-            try {                
-                
-                // Check if a user is logged in - store token if so
-                const token = Auth.loggedIn() ? Auth.getToken() : null;
 
-                // If token is null then stop
-                if (!token) {
-                    return false;
-                }
+        // const getUserData = async () => {
+        try {                
+            
+            console.log("getUserData engaged")
+            // const response = await getMe(token);
 
-                console.log("token", token)
-                // If token OK then call "getMe" passing through token details
-                // const response = await getMe(token);
 
-                
+            
+            // if (!response.ok) {
+            //     throw new Error('something went wrong!');
+            // }
 
-                // if (!response.ok) {
-                //     throw new Error('something went wrong!');
-                // }
-
-                // const user = await response.json();
-                // setUserData(user);
-            } catch (err) {
-                console.error(err);
-            }
-        };
+            // const user = await response.json();
+            // setUserData(user);
+        } catch (err) {
+            console.error(err);
+        }
+        
 
         // Run get UserData if the userDataLength changes
-        getUserData();
-        }, [userDataLength]
-    );
-
-
-
-
-
-
+        // getUserData();
+        // }
+    }, [userDataLength]);
 
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
