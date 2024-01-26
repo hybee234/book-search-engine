@@ -75,7 +75,7 @@ const LoginForm = () => {
             // console.log ("data", data)
             // console.log ("data.login.token", data.login.token)
             
-            // [HL] Store token in local storage as id_token
+            // Store token in local storage - id_token (Auth.login already redirects use to home page)
             Auth.login(data.login.token);
         } catch (err) {
             console.error(err);
