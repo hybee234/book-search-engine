@@ -8,7 +8,7 @@ class AuthService {
     return decode(this.getToken());
   }
 
-  // check if user's logged in
+  // check if user's logged in (used to ternary statements in pages/components to conditionally render)
   loggedIn() {
     // Checks if there is a saved token and it's still valid
     const token = this.getToken();
@@ -33,7 +33,7 @@ class AuthService {
   }
 
   login(idToken) {
-    // Saves user token to localStorage
+    // Saves user token to localStorage and loads the home page    
     localStorage.setItem('id_token', idToken);
     window.location.assign('/');
   }

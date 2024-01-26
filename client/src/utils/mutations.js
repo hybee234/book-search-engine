@@ -1,0 +1,87 @@
+import { gql } from '@apollo/client';
+
+export const CREATE_USER = gql`
+    mutation CreateUser($username: String!, $password: String!, $email: String!) {
+        createUser(username: $username, password: $password, email: $email) {
+            token
+            user {
+                _id
+                bookCount
+                email
+                username
+                savedBooks {
+                    _id
+                    authors
+                    bookId
+                    description
+                    image
+                    link
+                    title
+                }
+            }
+        }
+    }
+`;
+
+export const LOG_IN = gql`
+    mutation Login($password: String!, $username: String, $email: String) {
+        login(password: $password, username: $username, email: $email) {
+            token
+            user {
+                _id
+                bookCount
+                email
+                username
+                savedBooks {
+                    _id
+                    authors
+                    bookId
+                    description
+                    image
+                    link
+                    title
+                }
+            }
+        }
+    }
+`;
+
+export const SAVE_BOOK = gql`
+    mutation SaveBook($userId: ID!, $book: saveBookInput) {
+        saveBook(userId: $userId, book: $book) {
+            _id
+            email
+            bookCount
+            username
+            savedBooks {
+                _id
+                authors
+                bookId
+                description
+                image
+                link
+                title
+            }
+        }
+    }
+`;
+
+export const DELETE_BOOK = gql`
+    mutation DeleteBook($userId: ID!, $bookId: ID!) {
+        deleteBook(userId: $userId, bookId: $bookId) {
+            _id
+            bookCount
+            email
+            username
+            savedBooks {
+                _id
+                authors
+                bookId
+                description
+                image
+                link
+                title
+            }
+        }
+    }
+`;
