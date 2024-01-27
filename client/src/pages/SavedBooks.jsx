@@ -13,29 +13,28 @@ import { removeBookId } from '../utils/localStorage';
 import { GET_ME } from './../utils/queries'
 import { DELETE_BOOK } from './../utils/mutations'
 
-//import { getMe, deleteBook } from '../utils/API';
-//import Auth from '../utils/auth';
-
 const SavedBooks = () => {
 
+    // Retrived Logged in User records and attached savedBooks for rendering
     const { data, loading } = useQuery(GET_ME);
     // console.log(data)
+    // Store data as "userData" for rendering
     let userData = data?.me || {};
 
-
-    const [deleteBook, { error }] = useMutation(DELETE_BOOK); // Delete
+    // Delete book route
+    const [deleteBook, { error }] = useMutation(DELETE_BOOK);
 
     const handleDeleteBook = async (bookId) =>  {
-        console.log ("handleDeleteBook called")
+        // console.log ("handleDeleteBook called")
         try {
-            // Remove book from MongoDB
+            // Remove book from user record
             const { data } = await deleteBook({
                 variables: {
                     bookId: bookId
                 }
             });
 
-            console.log("data", data)
+            // console.log("data", data)
 
             //Remove bookID from local storage
             removeBookId(bookId);
