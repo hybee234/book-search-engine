@@ -98,7 +98,7 @@ const resolvers = {
             // console.log("args", args)   
 
             if (!context.user) {
-                throw AuthenticationError;
+                throw AuthenticationError("Unauthorised to Save");
             }
 
             //Lack of context.user info means JWT is absent and will throw an unauthenticated error
@@ -108,30 +108,37 @@ const resolvers = {
                 { new: true, runValidators: true }
             );
 
-
             return saveBook
         },
 
-        deleteBook: async (parent, args, context) => {
+        deleteBook: async (parent, {bookId}, context) => {
             
             console.log (`\x1b[33m ┌──────────────┐ \x1b[0m\x1b[32m  \x1b[0m`);
             console.log (`\x1b[33m │ Delete Book  │ \x1b[0m\x1b[32m  \x1b[0m`); 
             console.log (`\x1b[33m └──────────────┘ \x1b[0m\x1b[32m  \x1b[0m`); 
 
-            console.log("context.User", context.User)        
+            console.log("context.user", context.user)        
+            console.log("args.bookId", bookId)   
+
+            // If not logged in then throw Unauthorised error
+            if (!context.user) {
+                throw AuthenticationError("Unauthorised to Delete");
+            }     
             
-            const updatedUser = await User.findOneAndUpdate(
-                { _id: args.userId },
-                { $pull: { savedBooks: { bookId: args.bookId } } },
+            const deleteBook = await User.findOneAndUpdate(
+                { _id: context.user._Id },
+                { $pull: { savedBooks: { bookId: bookId } } },
                 { new: true }
-            );
+            ).exec()
 
-            // TODO - make sure user is logged in - or is this route only available when logged in?
+            console.log (deleteBook)
+            if (!deleteBook) {
+                console.log("deleteBook Failed")
+            }
 
-            return updatedUser;
+            return deleteBook;
         },
     }
-
 };
 
 module.exports = resolvers;
