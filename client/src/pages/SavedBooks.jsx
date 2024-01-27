@@ -16,16 +16,13 @@ import { removeBookId } from '../utils/localStorage';
 import { GET_ME } from './../utils/queries'
 import { DELETE_BOOK } from './../utils/mutations'
 
+
 const SavedBooks = () => {
     const [userData, setUserData] = useState({});
-
     // use this to determine if `useEffect()` hook needs to run again
     const userDataLength = Object.keys(userData).length;
 
 
-    const {loading, data} = useQuery( GET_ME ); // fetch data
-    console.log('data - get_me front end', data)
-    console.log("userDataLength", userDataLength)
     // Original code - RESTApi
     // useEffect(() => {
     //     const getUserData = async () => {
@@ -61,27 +58,23 @@ const SavedBooks = () => {
 
     // New code Graph QL
     useEffect(() => {
-
         // const getUserData = async () => {
-        try {                
-            
-            console.log("getUserData engaged")
-            // const response = await getMe(token);
+        try {      
+            console.log("getUserData triggered")
 
+            const {loading, data} = useQuery( GET_ME ); // Grab data
+            console.log('GET ME data', data)
+            // setUserData(data.savedBooks)  //update userData state
+            console.log('userData', userData)
+            console.log("userDataLength", userDataLength)
 
-            
-            // if (!response.ok) {
-            //     throw new Error('something went wrong!');
-            // }
 
             // const user = await response.json();
             // setUserData(user);
         } catch (err) {
             console.error(err);
         }
-        
-
-        // Run get UserData if the userDataLength changes
+                // Run get UserData if the userDataLength changes
         // getUserData();
         // }
     }, [userDataLength]);
