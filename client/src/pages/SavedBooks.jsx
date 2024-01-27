@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import {
     Container,
@@ -8,9 +8,8 @@ import {
     Col
 } from 'react-bootstrap';
 
-import { getMe, deleteBook } from '../utils/API';
-
-import Auth from '../utils/auth';
+//import { getMe, deleteBook } from '../utils/API';
+//import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
 import { GET_ME } from './../utils/queries'
@@ -18,100 +17,40 @@ import { DELETE_BOOK } from './../utils/mutations'
 
 
 const SavedBooks = () => {
-    const [userData, setUserData] = useState({});
-    // use this to determine if `useEffect()` hook needs to run again
-    const userDataLength = Object.keys(userData).length;
+
+    const { data, loading } = useQuery(GET_ME);
+    // console.log(data)
+    let userData = data?.me || {};
 
 
-    // Original code - RESTApi
-    // useEffect(() => {
-    //     const getUserData = async () => {
-    //         try {
-    //             // Check if a user is logged in - store token if so
-    //             const token = Auth.loggedIn() ? Auth.getToken() : null;
+    const [deleteBook, { error }] = useMutation(DELETE_BOOK); // Delete
 
-    //             // If token is null then stop
-    //             if (!token) {
-    //                 return false;
-    //             }
-
-    //             // If token OK then call "getMe" passing through token details
-    //             const response = await getMe(token);
-
-    //             if (!response.ok) {
-    //                 throw new Error('something went wrong!');
-    //             }
-
-    //             const user = await response.json();
-    //             setUserData(user);
-    //         } catch (err) {
-    //             console.error(err);
-    //         }
-    //     };
-
-    //     // Run get UserData if the userDataLength changes
-    //     getUserData();
-    //     }, [userDataLength]
-    // );
-
-
-
-    // New code Graph QL
-    useEffect(() => {
-        // const getUserData = async () => {
-        try {      
-            console.log("getUserData triggered")
-
-            const {loading, data} = useQuery( GET_ME ); // Grab data
-            console.log('GET ME data', data)
-            // setUserData(data.savedBooks)  //update userData state
-            console.log('userData', userData)
-            console.log("userDataLength", userDataLength)
-
-
-            // const user = await response.json();
-            // setUserData(user);
-        } catch (err) {
-            console.error(err);
-        }
-                // Run get UserData if the userDataLength changes
-        // getUserData();
-        // }
-    }, [userDataLength]);
-
-
-  // create function that accepts the book's mongo _id value as param and deletes the book from the database
-    const handleDeleteBook = async (bookId) => {
-        const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-        if (!token) {
-            return false;
-        }
-
+    const handleDeleteBook = async (bookId) =>  {
+        console.log ("handleDeleteBook called")
         try {
-            const response = await deleteBook(bookId, token);
+            // Remove book from MongoDB
+            const { data } = await deleteBook({
+                variables: {
+                    bookId: bookId
+                }
+            });
 
-            if (!response.ok) {
-                throw new Error('something went wrong!');
-            }
+            console.log("data", data)
 
-            const updatedUser = await response.json();
-            setUserData(updatedUser);
-            // upon success, remove book's id from localStorage
+            //Remove bookID from local storage
             removeBookId(bookId);
-        } catch (err) {
-            console.error(err);
+            } catch (err) {
+                console.log(JSON.stringify(err, null, 2)); //Much better error reporting for GraphQl issues
+            }
         }
-    };
 
-  // if data isn't here yet, say so
-    if (!userDataLength) {
+    if (loading) {
         return <h2>LOADING...</h2>;
-    }
+    }   
 
     return (
         <>
-            <div fluid className="text-light bg-dark p-5">
+            <div className="fluid text-light bg-dark p-5">
                 <Container>
                     <h1>Viewing saved books!</h1>
                 </Container>
@@ -134,8 +73,8 @@ const SavedBooks = () => {
                 <Row>
                 {userData.savedBooks.map((book) => {
                     return (
-                        <Col md="4">
-                            <Card key={book.bookId} border='dark'>
+                        <Col key={book.bookId} md="4">
+                            <Card border='dark'>
                                 {book.image ? <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' /> : null}
                                 <Card.Body>
                                     <Card.Title>{book.title}</Card.Title>

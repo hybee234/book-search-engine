@@ -118,7 +118,7 @@ const SearchBooks = () => {
             // Data provides the "saveBook JSON array"
             console.log("data", data)
 
-            // if book successfully saves to user's account, save book id to state
+            // Save Book ID to local storage
             setSavedBookIds([...savedBookIds, bookToSave.bookId]);
         } catch (err) {
         // console.error(err);
