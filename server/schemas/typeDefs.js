@@ -1,22 +1,21 @@
 // Define the necessary `Query` and `Mutation` types
 
 const typeDefs = `
-    type Book {
-        _id: ID
-        authors: [String]
-        description: String
-        bookId: String
-        image: String        
-        link: String
-        title: String
-    }
-
     type User {
         _id: ID
         username: String
         email: String
         bookCount: Int
         savedBooks: [Book]
+    }
+
+    type Book {
+        authors: [String]
+        description: String
+        bookId: String
+        image: String        
+        link: String
+        title: String
     }
 
     type Auth {
@@ -45,6 +44,7 @@ const typeDefs = `
         login(username: String email: String password: String!): Auth
         saveBook(book:saveBookInput): User
         deleteBook (bookId: String! ): User
+        deleteBookGraphQl (bookId: String! ): User
     }
 
 

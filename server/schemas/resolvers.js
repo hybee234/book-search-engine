@@ -108,36 +108,79 @@ const resolvers = {
                 { new: true, runValidators: true }
             );
 
+            console.log (saveBook)
+
             return saveBook
         },
 
-        deleteBook: async (parent, {bookId}, context) => {
+        deleteBook: async (parent, args, context) => {
             
             console.log (`\x1b[33m ┌──────────────┐ \x1b[0m\x1b[32m  \x1b[0m`);
             console.log (`\x1b[33m │ Delete Book  │ \x1b[0m\x1b[32m  \x1b[0m`); 
             console.log (`\x1b[33m └──────────────┘ \x1b[0m\x1b[32m  \x1b[0m`); 
 
-            console.log("context.user", context.user)        
-            console.log("args.bookId", bookId)   
+            console.log("context.user._id", context.user._id)        
+            console.log("args.bookId", args.bookId)   
 
-            // If not logged in then throw Unauthorised error
+            //If not logged in then throw Unauthorised error
             if (!context.user) {
                 throw AuthenticationError("Unauthorised to Delete");
             }     
-            
+
             const deleteBook = await User.findOneAndUpdate(
-                { _id: context.user._Id },
-                { $pull: { savedBooks: { bookId: bookId } } },
+                { _id: context.user._id },
+                { $pull: { savedBooks: { bookId: args.bookId } } },
                 { new: true }
-            ).exec()
+            )
 
             console.log (deleteBook)
+
             if (!deleteBook) {
                 console.log("deleteBook Failed")
             }
 
             return deleteBook;
         },
+
+
+        deleteBookGraphQl: async (parent, args) => {
+            
+            console.log (`\x1b[33m ┌──────────────────────┐ \x1b[0m\x1b[32m  \x1b[0m`);
+            console.log (`\x1b[33m │ Delete Book GraphQL  │ \x1b[0m\x1b[32m  \x1b[0m`); 
+            console.log (`\x1b[33m └──────────────────────┘ \x1b[0m\x1b[32m  \x1b[0m`); 
+
+            let abc={}
+            abc = "65b4748dfecc4e565063fc89" // User _id
+
+            // args.bookId = "71nDBQAAQBAJ"
+
+            console.log ("user_id", abc)
+            console.log ("acgs.bookId", args.bookId)
+
+            console.log("context.user", abc)        
+            console.log("args.bookId", args.bookId)   
+
+            // If not logged in then throw Unauthorised error
+            // if (!context.user) {
+            //     throw AuthenticationError("Unauthorised to Delete");
+            // }     
+
+            const deleteBook = await User.findOneAndUpdate(
+                { _id: abc },
+                { $pull: { savedBooks: { bookId: args.bookId } } },
+                { new: true }
+            )
+
+            console.log (deleteBook)
+
+            if (!deleteBook) {
+                console.log("deleteBook Failed")
+            }
+
+            return deleteBook;
+        },
+
+
     }
 };
 
