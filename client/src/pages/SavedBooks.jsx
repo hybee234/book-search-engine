@@ -8,13 +8,13 @@ import {
     Col
 } from 'react-bootstrap';
 
-//import { getMe, deleteBook } from '../utils/API';
-//import Auth from '../utils/auth';
+import { Link } from 'react-router-dom';
 import { removeBookId } from '../utils/localStorage';
-
 import { GET_ME } from './../utils/queries'
 import { DELETE_BOOK } from './../utils/mutations'
 
+//import { getMe, deleteBook } from '../utils/API';
+//import Auth from '../utils/auth';
 
 const SavedBooks = () => {
 
@@ -77,7 +77,7 @@ const SavedBooks = () => {
                             <Card border='dark'>
                                 {book.image ? <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' /> : null}
                                 <Card.Body>
-                                    <Card.Title>{book.title}</Card.Title>
+                                    <Card.Title><Link to={book.link} target="_blank">{book.title}</Link></Card.Title>
                                     <p className='small'>Authors: {book.authors}</p>
                                     <Card.Text>{book.description}</Card.Text>
                                     <Button className='btn-block btn-danger' onClick={() => handleDeleteBook(book.bookId)}>

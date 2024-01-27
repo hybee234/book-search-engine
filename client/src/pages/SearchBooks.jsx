@@ -11,12 +11,11 @@ import {
 import { Link } from 'react-router-dom';
 import Auth from '../utils/auth';
 import { searchGoogleBooks } from '../utils/API';
-//import { saveBook } from '../utils/API';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
-
 import { useMutation } from '@apollo/client';
 import { SAVE_BOOK } from './../utils/mutations'
 
+//import { saveBook } from '../utils/API';
 
 const SearchBooks = () => {
     // create state for holding returned google api data
@@ -49,18 +48,20 @@ const SearchBooks = () => {
             }
 
             const { items } = await response.json();
-
-            // console.log("items", items)
+            // console.log("Google response", items)
 
             const bookData = items.map((book) => ({
                 bookId: book.id,
                 authors: book.volumeInfo.authors || ['No author to display'],
                 title: book.volumeInfo.title,
-                description: book.volumeInfo.description,
+                description: book.volumeInfo.description || 'No Description Available',
                 image: book.volumeInfo.imageLinks?.thumbnail || '',
                 // [HL] added this one in
                 link: book.volumeInfo.previewLink
             }));
+
+            // Google response mapped into new array
+            console.log("bookData", bookData)
 
             setSearchedBooks(bookData);
             setSearchInput('');
@@ -69,35 +70,6 @@ const SearchBooks = () => {
         }
     };
 
-    // Original Code
-    // create function to handle saving a book to our database
-    // const handleSaveBook = async (bookId) => {
-    //     // find the book in `searchedBooks` state by the matching id
-    //     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
-
-    //     // get token
-    //     const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-    //     if (!token) {
-    //         return false;
-    //     }
-
-    //     try {
-    //         const response = await saveBook(bookToSave, token);
-
-    //         if (!response.ok) {
-    //             throw new Error('something went wrong!');
-    //         }
-
-    //         // if book successfully saves to user's account, save book id to state
-    //         setSavedBookIds([...savedBookIds, bookToSave.bookId]);
-    //     } catch (err) {
-    //     console.error(err);
-    //     }
-    // };
-
-
-    // To turn to GraphQL
     // Bring GraphQL query in with useMutation Hook
     const [SaveBook, { error }] = useMutation(SAVE_BOOK);
 
