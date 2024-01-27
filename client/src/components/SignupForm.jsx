@@ -4,8 +4,6 @@ import { Form, Button, Alert } from 'react-bootstrap';
 import { useMutation } from '@apollo/client';
 import { CREATE_USER } from './../utils/mutations'
 
-// import { createUser } from '../utils/API';
-
 import Auth from '../utils/auth';
 
 const SignupForm = () => {
@@ -21,49 +19,13 @@ const SignupForm = () => {
         setUserFormData({ ...userFormData, [name]: value });
     };
 
-
-    //Original Create User RestFul API approach
-    // const handleFormSubmit = async (event) => {
-    //     event.preventDefault();
-
-    //     // check if form has everything (as per react-bootstrap docs)
-    //     const form = event.currentTarget;
-    //     if (form.checkValidity() === false) {
-    //         event.preventDefault();
-    //         event.stopPropagation();
-    //     }
-
-    //     try {
-    //         const response = await createUser(userFormData);
-
-    //         if (!response.ok) {
-    //             throw new Error('something went wrong!');
-    //         }
-
-    //         const { token, user } = await response.json();
-    //         console.log(user);
-    //         Auth.login(token);
-    //     } catch (err) {
-    //         console.error(err);
-    //         setShowAlert(true);
-    //     }
-
-    //     setUserFormData({
-    //         username: '',
-    //         email: '',
-    //         password: '',
-    //     });
-    // };
-
-
-    // GraphQL useMutation method
     // Bring GraphQL query in with useMutation Hook
     const [CreateUser, { error }] = useMutation(CREATE_USER);
 
     const handleFormSubmit = async (event) => {
         event.preventDefault();
 
-        // check if form has everything (as per react-bootstrap docs)
+        // Check if form has everything (as per react-bootstrap docs)
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
             event.preventDefault();
@@ -76,14 +38,10 @@ const SignupForm = () => {
             const { data } = await CreateUser({
                 variables: {
                     username: userFormData.username,
-                    email:userFormData.email,
+                    email: userFormData.email,
                     password: userFormData.password,
                 }
             })
-
-            // console.log("data", data)
-            // console.log("data.createUser.token", data.createUser.token)
-            // console.log("data.createUser.user", data.createUser.user)
 
             // Store token in local storage - id_token (Auth.login already redirects use to home page)
             Auth.login(data.createUser.token);
