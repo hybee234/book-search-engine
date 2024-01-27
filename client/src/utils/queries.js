@@ -8,7 +8,6 @@ export const QUERY_SINGLE_USER = gql`
             email
             bookCount
             savedBooks {
-                _id
                 authors
                 bookId
                 description
@@ -28,7 +27,6 @@ export const GET_ME = gql`
             email
             bookCount
             savedBooks {
-                _id
                 authors
                 bookId
                 description
