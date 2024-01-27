@@ -1,5 +1,3 @@
-// Define the necessary `Query` and `Mutation` types
-
 const typeDefs = `
     type User {
         _id: ID
@@ -26,7 +24,6 @@ const typeDefs = `
     type Query {
         users: [User]
         me: User
-        singleUser(username: String, userId: ID): User
     }
 
     input saveBookInput {
